@@ -1,6 +1,6 @@
-//TODO: install from npm
 var noop = function () {
 };
+
 var deviceReadyPromise = new Promise(function (resolve) {
   document.addEventListener("deviceready", function () {
     resolve();
@@ -38,6 +38,10 @@ window.sys = {
   },
 };
 
+if (!window.$launchParams) {
+  window.$launchParams = [];
+}
+
 /*
  * below are PC shim related code
  */
@@ -65,7 +69,6 @@ function loadScript(src) {
   });
 }
 
-// shim when developing on a PC
 window.sys_shim = {
   toast: function (text) {
     alert(text)
