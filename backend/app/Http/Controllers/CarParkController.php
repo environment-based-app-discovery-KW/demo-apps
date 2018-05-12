@@ -43,6 +43,16 @@ class CarParkController extends BaseController
         $payment->amount_paid = $signedContent->amount_to_pay;
         $payment->paid = 1;
         $payment->save();
-        return ["ok" => true];
+
+        // forward payment request to central server
+        $ch = curl_init(env('CENTRAL_SERVER_URL') . "/payment/submit");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents("php://input"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_PROXY, "");
+
+        $result = curl_exec($ch);
+        return ["ok" => true, "result" => $result];
     }
 }
