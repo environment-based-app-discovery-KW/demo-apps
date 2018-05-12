@@ -37,7 +37,6 @@ function rrmdir($dir) {
 function verfiySignature($signature, $signedContent, $publicKey)
 {
     $signature = preg_replace('/\s/', '', $signature);
-    $signedContent = preg_replace('/\s/', '', $signedContent);
     $publicKey = preg_replace('/\s/', '', $publicKey);
 
     $rsa = new RSA();
