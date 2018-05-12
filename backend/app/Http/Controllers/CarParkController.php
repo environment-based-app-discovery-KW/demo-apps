@@ -53,6 +53,11 @@ class CarParkController extends BaseController
         curl_setopt($ch, CURLOPT_PROXY, "");
 
         $result = curl_exec($ch);
-        return ["ok" => true, "result" => $result];
+        $result_parsed = json_decode($result);
+        if ($result_parsed->ok) {
+            return ["ok" => true];
+        } else {
+            return error($result);
+        }
     }
 }
