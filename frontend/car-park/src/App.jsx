@@ -123,7 +123,7 @@ class App extends Component {
                }}
         />
         <div className="button-bar">
-          <a className="button is-primary" onClick={() => this.showModal()}>付车费</a>
+          <a className="button is-primary" onClick={() => this.showModal()}>在线支付停车费</a>
           <a className="button is-success">寻车导航</a>
         </div>
       </div>
