@@ -20,6 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CarParkPayment whereLicensePlateNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CarParkPayment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\CarParkPayment whereUserPublicKey($value)
+ * @property int $paid
+ * @property int $parking_minutes
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CarParkPayment wherePaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\CarParkPayment whereParkingMinutes($value)
  */
 class CarParkPayment extends Model
 {
