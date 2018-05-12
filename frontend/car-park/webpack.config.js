@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require('path');
 const BUILD_DIR = path.join(__dirname, '/dist');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const PATHS = {
   src: path.join(__dirname, '/src'),
@@ -23,27 +24,20 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
-    }),
-    new HtmlWebpackPlugin()
+    new UglifyJsPlugin(),
+    new HtmlWebpackPlugin(),
   ],
 
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
       },
       {
-        test: /\.jsx$/,
-        use: {
-          loader: "babel-loader",
-        },
-      }, {
         test: /\.css$/,
         use: [
           { loader: "style-loader" },
@@ -52,8 +46,18 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        loader: 'react-svg-loader'
-      }
+        loader: 'react-svg-loader',
+      },
+      {
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader',
+        }, {
+          loader: 'less-loader',
+        }],
+      },
     ],
   },
 };
