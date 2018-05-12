@@ -32,8 +32,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.js$/,
         exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.jsx$/,
         use: {
           loader: "babel-loader",
         },
@@ -44,6 +50,10 @@ module.exports = {
           { loader: "css-loader" },
         ],
       },
+      {
+        test: /\.svg$/,
+        loader: 'react-svg-loader'
+      }
     ],
   },
 };
