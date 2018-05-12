@@ -79,7 +79,7 @@ class App extends Component {
         <Icon className="app-icon"/>
       </div>
       <div className="plaza-name">
-        商业广场 - 停车场
+        {window.$launchParams.carParkName || "(无名)"} - 停车场
       </div>
 
       <div className={"modal " + (this.state.showModal ? "is-active" : "")}>
