@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import axios from "axios";
+import config from "./config.js";
 import Icon from "./assets/icon.svg";
+
 
 class App extends Component {
 
@@ -10,6 +13,7 @@ class App extends Component {
       licensePlateNumber: "",
       userName: "",
       parkingTime: "",
+      parkingMinutes: 0,
       price: "",
     };
   }
@@ -21,6 +25,7 @@ class App extends Component {
       this.setState({
         showModal: true,
         parkingTime: (`${hours}小时 ${minutes}分钟`),
+        parkingMinutes: hours * 60 + minutes,
         price: ((hours + 1) * 8).toFixed(2),
       });
     } else {
@@ -40,20 +45,29 @@ class App extends Component {
   }
 
   pay() {
-    window.sys.requestPayment({
-        amountToPay: this.state.price * 100,
-        orderId: "ID_" + (+new Date()) + "_" + (Math.random() + "").substring(3),
-        orderTitle: "停车费支付",
-        orderDescription: "车牌号：" + this.state.licensePlateNumber + "，停车时间：" + this.state.parkingTime,
-      },
-      data => {
-        alert("支付成功，谢谢");
-        console.log(data);
-        window.location.reload();
-      },
-      data => {
-        alert("已经拒绝支付")
-      })
+
+    axios.post(config.backendUrl + "/car-park/order", {
+      license_plate_number: this.state.licensePlateNumber,
+      parking_minutes: this.state.parkingMinutes,
+    }).then(order => {
+      console.log(order);
+      window.sys.requestPayment({
+          amountToPay: this.state.price * 100,
+          orderId: order.data.id,
+          orderTitle: "停车费支付",
+          orderDescription: "车牌号：" + this.state.licensePlateNumber + "，停车时间：" + this.state.parkingTime,
+        },
+        data => {
+          console.log(data, config.backendUrl + "/car-park/pay");
+          axios.post(config.backendUrl + "/car-park/pay", data).then(data => {
+            alert("支付成功，谢谢");
+            window.location.reload();
+          });
+        },
+        data => {
+          alert("已经拒绝支付")
+        })
+    });
   }
 
   render() {
