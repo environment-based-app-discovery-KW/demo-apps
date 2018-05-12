@@ -15,7 +15,7 @@ class CreateCarParkPaymentsTable extends Migration
     {
         Schema::create('car_park_payments', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("user_public_key");
+            $table->longText("user_public_key");
             $table->string("license_plate_number");
             $table->integer("amount_paid");
             $table->timestamps();
