@@ -25,7 +25,9 @@ module.exports = {
   },
   plugins: [
     new UglifyJsPlugin(),
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: './src/index.html'
+    }),
   ],
 
   module: {
