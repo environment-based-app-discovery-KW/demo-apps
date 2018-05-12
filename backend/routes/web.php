@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['prefix' => 'car-park'], function () {
+    Route::post('pay', 'CarParkController@pay');
+    Route::post('order', 'CarParkController@order');
 });
