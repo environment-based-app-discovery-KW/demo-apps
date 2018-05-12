@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require('path');
 const BUILD_DIR = path.join(__dirname, '/dist');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const PATHS = {
   src: path.join(__dirname, '/src'),
@@ -24,7 +25,9 @@ module.exports = {
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false },
-    })],
+    }),
+    new HtmlWebpackPlugin()
+  ],
 
   module: {
     rules: [
@@ -38,9 +41,9 @@ module.exports = {
         test: /\.css$/,
         use: [
           { loader: "style-loader" },
-          { loader: "css-loader" }
-        ]
-      }
+          { loader: "css-loader" },
+        ],
+      },
     ],
   },
 };
