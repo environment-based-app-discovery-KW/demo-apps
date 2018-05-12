@@ -1,5 +1,6 @@
 //TODO: install from npm
-
+var noop = function () {
+};
 var deviceReadyPromise = new Promise(function (resolve) {
   document.addEventListener("deviceready", function () {
     resolve();
@@ -15,17 +16,16 @@ window.sys = {
     deviceReadyPromise.then(function () {
       cordova.exec(function (data) {
         successCallback(JSON.parse(data))
-      }, failCallback, 'Auth', 'getUserInfo', fields);
+      }, failCallback || noop, 'Auth', 'getUserInfo', fields);
     });
   },
   getUserIdentity: function (successCallback) {
     // fields: [ "name", "mobile", "email" ]
     deviceReadyPromise.then(function () {
       cordova.exec(function (data) {
-        successCallback(JSON.parse(data))
-      }, function () {
-        // this request will never fail
-      }, 'Auth', 'getUserIdentity');
+          successCallback(JSON.parse(data))
+        }, noop // this request will never fail
+        , 'Auth', 'getUserIdentity');
     });
   },
   requestPayment: function (options, successCallback, failCallback) {
@@ -33,7 +33,7 @@ window.sys = {
     deviceReadyPromise.then(function () {
       cordova.exec(function (data) {
         successCallback(JSON.parse(data))
-      }, failCallback, 'Auth', 'requestPayment', [options]);
+      }, failCallback || noop, 'Auth', 'requestPayment', [options]);
     });
   },
 };
@@ -84,7 +84,7 @@ window.sys_shim = {
       }
       successCallback(data)
     } else {
-      failCallback();
+      (failCallback || noop)();
     }
   },
   getUserIdentity: function (successCallback) {
@@ -117,7 +117,7 @@ window.sys_shim = {
           signedContent: toSign,
         })
       } else {
-        failCallback();
+        (failCallback || noop)();
       }
     });
   },
