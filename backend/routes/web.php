@@ -26,3 +26,7 @@ Route::group(['prefix' => 'exam'], function () {
     Route::get('/get-paper', 'ExamController@getPaper');
     Route::post('/submit', 'ExamController@submit');
 });
+
+Route::group(['prefix' => 'schedule'], function () {
+    Route::any('/', 'ScheduleController@index');
+});
