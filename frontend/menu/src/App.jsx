@@ -81,7 +81,7 @@ class App extends Component {
 
         <div className="items">
           {this.state.data.map(item => {
-            return <div className="item" onClick={() => {
+            return <div className="item" key={item.item_id} onClick={() => {
               this.setState({ modalItem: item });
             }}>
               <div className="image">
@@ -100,6 +100,12 @@ class App extends Component {
           })}
         </div>
       </div>
+      <div className="footer">
+        <span className="price">￥{this.getTotalPrice()}</span> <span className="hint">已经选择 {this.getCount()} 件物品</span>
+        <div className="checkout">
+          下单
+        </div>
+      </div>
     </div>
   }
 
@@ -110,6 +116,14 @@ class App extends Component {
     if (order[item_id] < 0) order[item_id] = 0;
     if (!+order[item_id]) order[item_id] = 0;
     this.setState({ order });
+  }
+
+  getTotalPrice() {
+    return Object.keys(this.state.order).reduce((prv, curr) => prv + this.state.data.filter(_ => _.item_id === curr)[0].price * this.state.order[curr], 0)
+  }
+
+  getCount() {
+    return Object.keys(this.state.order).reduce((prv, curr) => prv + this.state.order[curr], 0)
   }
 }
 
