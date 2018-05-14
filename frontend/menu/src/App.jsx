@@ -101,8 +101,9 @@ class App extends Component {
         </div>
       </div>
       <div className="footer">
-        <span className="price">￥{this.getTotalPrice()}</span> <span className="hint">已经选择 {this.getCount()} 件物品</span>
-        <div className="checkout">
+        <span className="price">￥{this.getTotalPrice()}</span> <span
+        className="hint">已经选择 {this.getCount()} 件物品</span>
+        <div className="checkout" onClick={() => this.placeOrder()}>
           下单
         </div>
       </div>
@@ -124,6 +125,33 @@ class App extends Component {
 
   getCount() {
     return Object.keys(this.state.order).reduce((prv, curr) => prv + this.state.order[curr], 0)
+  }
+
+  placeOrder() {
+    let orders = [];
+    Object.keys(this.state.order).forEach(item => {
+      if (+this.state.order[item]) {
+        orders.push({
+          quantity: this.state.order[item],
+          item_id: item,
+        });
+      }
+    });
+    let totalPrice = this.getTotalPrice();
+    if (totalPrice === 0) {
+      return;
+    }
+    sys.requestPayment({
+      amountToPay: totalPrice * 100,
+      orderId: (Math.random() + "").substr(2),
+      orderTitle: "餐厅点餐",
+      orderDescription: "共" + this.getCount() + "样菜品",
+    }, (paymentData) => {
+      axios.post(config.backendUrl + "/menu/order", { ...paymentData, orders }).then(data => {
+        alert("点单成功！谢谢");
+        window.location.reload();
+      })
+    });
   }
 }
 

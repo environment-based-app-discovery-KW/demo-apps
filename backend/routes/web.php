@@ -33,4 +33,5 @@ Route::group(['prefix' => 'schedule'], function () {
 
 Route::group(['prefix' => 'menu'], function () {
     Route::any('/get', 'MenuController@get');
+    Route::any('/order', 'MenuController@order');
 });
