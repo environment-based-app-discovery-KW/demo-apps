@@ -8,6 +8,25 @@ class Input extends Component {
     this.state = { valid: null, errorMessage: "" };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.props.value) {
+      this.validate(nextProps);
+    }
+  }
+
+  validate(propsRef = this.props) {
+    if (propsRef.validate) {
+      let validationResult = propsRef.validate(propsRef.value);
+      if (validationResult) {
+        this.setState({ valid: false, errorMessage: validationResult });
+      } else {
+        this.setState({ valid: true });
+      }
+    } else {
+      this.setState({ valid: null });
+    }
+  }
+
   render() {
     return <div className="field">
       <label className="label">{this.props.label}</label>
@@ -18,14 +37,7 @@ class Input extends Component {
           value={this.props.value}
           onChange={this.props.onChange}
           onBlur={() => {
-            if (this.props.validate) {
-              let validationResult = this.props.validate(this.props.value);
-              if (validationResult) {
-                this.setState({ valid: false, errorMessage: validationResult });
-              } else {
-                this.setState({ valid: true });
-              }
-            }
+            this.validate();
           }}
         />
         <span className="icon is-small is-left">
@@ -52,80 +64,84 @@ class App extends Component {
     super(props);
     this.state = {
       name: "",
+      mobile: "",
+      email: "",
     };
+  }
+
+
+  componentDidMount() {
+    sys.getUserInfo(['name', 'email', 'mobile'], data => {
+      this.setState(data);
+    })
   }
 
   render() {
     return <div>
-      <Input icon="user" label="姓名" placeholder="请输入姓名" value={this.state.name}
+      <div className="header">
+        活动报名
+      </div>
+      <Input icon="user" label="姓名" placeholder="请输入姓名"
+             value={this.state.name}
              onChange={e => {
                this.setState({ name: e.target.value })
-             }} validate={value => value}/>
-      <Input icon="user" label="姓名" placeholder="请输入姓名" validate={x => ""}/>
-      <Input icon="user" label="姓名" placeholder="请输入姓名"/>
-      <Input icon="user" label="姓名" valid={false} errorMessage={"xxx"}/>
+             }}
+             validate={value => {
+               if (!value) {
+                 return "姓名不能为空"
+               }
+             }}
+      />
+      <Input icon="envelope" label="邮箱" placeholder="请输入邮箱"
+             value={this.state.email}
+             onChange={e => {
+               this.setState({ email: e.target.value })
+             }}
+             validate={value => {
+               if (!value) {
+                 return "邮箱不能为空"
+               }
+               if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(value).toLowerCase())) {
+                 return "邮箱地址无效"
+               }
+             }}
+      />
+      <Input icon="mobile" label="手机号" placeholder="请输入手机号"
+             value={this.state.mobile}
+             onChange={e => {
+               this.setState({ mobile: e.target.value })
+             }}
+             validate={value => {
+               if (!value) {
+                 return "手机号不能为空"
+               }
+               if (!/^1\d{10}$/.test(value)) {
+                 return "手机号无效"
+               }
+             }}
+      />
 
       <div className="field">
-        <label className="label">Email</label>
-        <div className="control has-icons-left has-icons-right">
-          <input className="input is-danger" type="email" placeholder="Email input"/>
-          <span className="icon is-small is-left">
-      <i className="fas fa-envelope"></i>
-    </span>
-          <span className="icon is-small is-right">
-      <i className="fas fa-exclamation-triangle"></i>
-    </span>
-        </div>
-        <p className="help is-danger">This email is invalid</p>
-      </div>
-
-      <div className="field">
-        <label className="label">Subject</label>
+        <label className="label">报名附言</label>
         <div className="control">
-          <div className="select">
-            <select>
-              <option>Select dropdown</option>
-              <option>With options</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div className="field">
-        <label className="label">Message</label>
-        <div className="control">
-          <textarea className="textarea" placeholder="Textarea"></textarea>
+          <textarea className="textarea" placeholder="选填项目"></textarea>
         </div>
       </div>
 
       <div className="field">
         <div className="control">
           <label className="checkbox">
-            <input type="checkbox"/>
-            I agree to the <a href="#">terms and conditions</a>
-          </label>
-        </div>
-      </div>
-
-      <div className="field">
-        <div className="control">
-          <label className="radio">
-            <input type="radio" name="question"/>
-            Yes.
-          </label>
-          <label className="radio">
-            <input type="radio" name="question"/>
-            No.
+            <input type="checkbox"/> 我同意报名条款
           </label>
         </div>
       </div>
 
       <div className="field is-grouped">
         <div className="control">
-          <button className="button is-link">Submit</button>
+          <button className="button is-link">立刻报名</button>
         </div>
         <div className="control">
-          <button className="button is-text">Cancel</button>
+          <button className="button is-text">取消</button>
         </div>
       </div>
     </div>
