@@ -19,3 +19,8 @@ Route::group(['prefix' => 'car-park'], function () {
 Route::group(['prefix' => 'sign-up'], function () {
     Route::post('/', 'SignUpController@index');
 });
+
+Route::group(['prefix' => 'exam'], function () {
+    Route::post('/get-user-info', 'ExamController@getUserInfo');
+    Route::post('/set-user-info', 'ExamController@setUserInfo');
+});
