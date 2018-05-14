@@ -27,7 +27,7 @@ body {
       position: relative;
       border-bottom: 1px solid #CCC;
       .content {
-        padding-left: 78px;
+        padding-left: 60px;
         min-height: 50px;
         padding-top: 10px;
         .price {
@@ -63,7 +63,7 @@ body {
       }
       .image {
         position: absolute;
-        left: 10px;
+        left: 4px;
         top: 5px;
         img {
           width: 50px;
@@ -73,4 +73,98 @@ body {
     }
   }
 
+  .modal {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    overflow: auto;
+    .quantity {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      button {
+        width: 26px;
+        height: 26px;
+        border-radius: 5px;
+        background: #DDD;
+        color: #999;
+      }
+      input {
+        font-size: 20px;
+        height: 20px;
+        border-radius: 5px;
+        border: 1px solid #EEE;
+        padding: 4px;
+        width: 30px;
+        margin: 0 6px;
+        vertical-align: middle;
+      }
+      .plus {
+        background: orange;
+        color: white;
+      }
+    }
+    .img {
+      width: 100%;
+      height: 250px;
+      background-position: center center;
+      background-size: cover;
+      border-bottom: 1px solid #DDD;
+    }
+    .rating-and-month-sales {
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      font-size: 12px;
+      span {
+        margin-right: 10px;
+        opacity: .5;
+      }
+      .price {
+        vertical-align: bottom;
+        color: orange;
+        font-weight: bold;
+        font-size: 15px;
+        opacity: 1;
+        margin-right: 6px;
+      }
+    }
+    .shade {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: #00000055;
+    }
+    .content {
+      overflow: hidden;
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      margin-bottom: 10px;
+      min-height: calc(~"100vh - 20px");
+      width: calc(~"100% - 20px");
+      border-radius: 5px;
+      background: white;
+      .inner-content {
+        padding: 10px;
+      }
+      .close {
+        padding: 10px;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .name {
+        color: orange;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 6px;
+      }
+    }
+  }
 }
