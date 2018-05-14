@@ -72,8 +72,14 @@ class App extends Component {
 
   componentDidMount() {
     sys.getUserInfo(['name', 'email', 'mobile'], data => {
-      this.setState(data);
+      this.setState({ ...this.state, ...data });
     })
+  }
+
+  submit() {
+    axios.post(config.backendUrl + "/sign-up", this.state).then(data => {
+      alert("报名成功，谢谢");
+    });
   }
 
   render() {
@@ -124,7 +130,8 @@ class App extends Component {
       <div className="field">
         <label className="label">报名附言</label>
         <div className="control">
-          <textarea className="textarea" placeholder="选填项目"></textarea>
+          <textarea className="textarea" placeholder="选填项目" value={this.state.comments}
+                    onChange={e => this.setState({ comments: e.target.value })}/>
         </div>
       </div>
 
@@ -138,7 +145,7 @@ class App extends Component {
 
       <div className="field is-grouped">
         <div className="control">
-          <button className="button is-link">立刻报名</button>
+          <button className="button is-link" onClick={() => this.submit()}>立刻报名</button>
         </div>
         <div className="control">
           <button className="button is-text">取消</button>
