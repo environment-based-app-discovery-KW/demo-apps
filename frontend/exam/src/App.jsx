@@ -158,6 +158,11 @@ class Paper extends Component {
           let remaining = this.state.paper.allowed_time_seconds - elapsed;
           let minutes = Math.floor(remaining / 60);
           let seconds = Math.floor(remaining % 60);
+          if (remaining <= 0) {
+            clearInterval(this.remainingTimeCalcInterval);
+            this.remainingTimeCalcInterval = 0;
+            this.doSubmit();
+          }
           this.setState({ remainingTime: minutes + ":" + seconds });
         }, 1000);
       }
@@ -186,12 +191,24 @@ class Paper extends Component {
     this.setState({ currentNo: this.state.currentNo - 1 })
   }
 
+  doSubmit() {
+    sys.getUserIdentity(userIdentity => {
+      axios.post(config.backendUrl + "/exam/submit", {
+        ...userIdentity,
+        answers: this.state.answers,
+      }).then(data => {
+        this.props.onResult(data.data);
+      });
+    });
+  }
+
   next() {
     if (this.state.currentNo < this.state.paper.content.length - 1) {
       this.setState({ currentNo: this.state.currentNo + 1 })
     } else {
       if (confirm("确定交卷吗?")) {
         //交卷
+        this.doSubmit();
       }
     }
   }
@@ -215,11 +232,11 @@ class Paper extends Component {
           {this.state.paper.content[this.state.currentNo].options.map((item, index) => (
             <div
               key={index}
-              className={"option " + (this.state.answers[this.state.currentNo] === index ? "active" : "")}
-              onClick={() => this.choose(index)}>
+              className={"option " + (this.state.answers[this.state.currentNo] === index + 1 ? "active" : "")}
+              onClick={() => this.choose(index + 1)}>
               {String.fromCharCode('A'.charCodeAt(0) + index)}. {item}
 
-              {this.state.answers[this.state.currentNo] === index &&
+              {this.state.answers[this.state.currentNo] === index + 1 &&
               <i className={"fas fa-check"}/>}
             </div>))}
         </div>
@@ -248,6 +265,7 @@ class App extends Component {
     super(props);
     this.state = {
       view: "",
+      testResult: null,
     };
   }
 
@@ -274,7 +292,18 @@ class App extends Component {
         this.setState({ view: "paper" });
       }}/>}
 
-      {this.state.view === "paper" && <Paper/>}
+      {this.state.view === "paper" && <Paper onResult={(testResult) => {
+        this.setState({ view: "test-result", testResult });
+      }}/>}
+
+      {this.state.view === "test-result" && <div className="test-result">
+        <b>交卷成功，您的分数为：</b>
+        <div className="score">
+          {this.state.testResult.score * 100 / this.state.testResult.fullScore}%
+          <div
+            className="small">({this.state.testResult.score}/{this.state.testResult.fullScore})</div>
+        </div>
+      </div>}
     </div>
   }
 }

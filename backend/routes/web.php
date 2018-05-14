@@ -24,4 +24,5 @@ Route::group(['prefix' => 'exam'], function () {
     Route::post('/get-user-info', 'ExamController@getUserInfo');
     Route::post('/set-user-info', 'ExamController@setUserInfo');
     Route::get('/get-paper', 'ExamController@getPaper');
+    Route::post('/submit', 'ExamController@submit');
 });
