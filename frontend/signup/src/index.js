@@ -7,7 +7,7 @@ const ReactDOM = require("react-dom");
 const React = require("react");
 import App from "./App.jsx";
 
-window.$appName = "car-park";
+window.$appName = "signup";
 
 window.onload = function () {
   let root = document.createElement("div");
