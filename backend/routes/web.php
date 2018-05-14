@@ -30,3 +30,7 @@ Route::group(['prefix' => 'exam'], function () {
 Route::group(['prefix' => 'schedule'], function () {
     Route::any('/', 'ScheduleController@index');
 });
+
+Route::group(['prefix' => 'menu'], function () {
+    Route::any('/get', 'MenuController@get');
+});
