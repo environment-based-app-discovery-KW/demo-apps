@@ -1,9 +1,13 @@
 body {
   min-height: 100vh;
-  padding: 56px 10px 10px;
+  .fill-info {
+    padding: 50px 10px 10px;
+  }
+  .paper {
+    padding: 50px 10px 10px;
+  }
   .header {
     width: 100%;
-    margin: 0 -10px;
     padding: 10px;
     background: #3273dc;
     text-align: center;
@@ -18,5 +22,71 @@ body {
     background: #3273dc;
     text-align: center;
     color: white;
+  }
+  h1 {
+    font-weight: bold;
+    color: #3273dc;
+  }
+  .text {
+    font-size: 20px;
+    margin-top: 6px;
+    margin-bottom: 20px;
+    border-left: 4px solid #3273dc66;
+    padding-left: 10px;
+  }
+  .options {
+    .option {
+      font-size: 15px;
+      padding: 10px 6px;
+      background: #FAFAFA;
+      border: 1px solid #3273dc;
+      margin-top: -1px;
+      position: relative;
+      &.active {
+        background: #3273dc;
+        color: #FAFAFA;
+      }
+      .fa-check {
+        position: absolute;
+        right: -8px;
+        top: -8px;
+        font-size: 50px;
+        opacity: .2;
+      }
+    }
+  }
+  .exam-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    .is-outlined {
+      background: white;
+    }
+    .countdown {
+      font-size: 12px;
+      text-align: right;
+      opacity: .5;
+      padding-right: 10px;
+      padding-bottom: 4px;
+    }
+    .buttons {
+      width: 100%;
+      display: flex;
+      margin-bottom: 0;
+      .button {
+        flex: 1;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .fa-clock {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    font-size: 260px;
+    opacity: .015;
+    z-index: -10000;
   }
 }

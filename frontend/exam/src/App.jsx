@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import axios from "axios";
 import config from "./config.js";
 
-const loading = <div style={{ textAlign: "center" }}>载入中，请稍等…</div>;
+const loading = <div style={{ textAlign: "center", paddingTop: 60 }}>载入中，请稍等…</div>;
+const loadingPaper = <div style={{ textAlign: "center", paddingTop: 60 }}>正在加载试卷…</div>;
 
 class Input extends Component {
   constructor() {
@@ -84,7 +85,7 @@ class FillInfo extends Component {
   }
 
   render() {
-    return <div>
+    return <div className="fill-info">
       <div className="info">
         欢迎参加在线测试。<br/><br/>您第一次参加在线考试，<br/>请补充姓名和学号信息。
       </div>
@@ -125,6 +126,10 @@ class Paper extends Component {
     super();
     this.state = {
       paper: null,
+      currentNo: 0,
+      timeStarted: 0,
+      remainingTime: "",
+      answers: [],
     };
   }
 
@@ -143,6 +148,18 @@ class Paper extends Component {
       if (paper.waiting) {
         this.setState({ paper: "waiting" });
         setTimeout(() => this.componentDidMount(), 5000);
+      } else {
+        this.setState({ paper: paper, timeStarted: +new Date(), answers: [] });
+        if (this.remainingTimeCalcInterval) {
+          clearInterval(this.remainingTimeCalcInterval);
+        }
+        this.remainingTimeCalcInterval = setInterval(() => {
+          let elapsed = (+new Date() - this.state.timeStarted) / 1000;
+          let remaining = this.state.paper.allowed_time_seconds - elapsed;
+          let minutes = Math.floor(remaining / 60);
+          let seconds = Math.floor(remaining % 60);
+          this.setState({ remainingTime: minutes + ":" + seconds });
+        }, 1000);
       }
     })
   }
@@ -159,13 +176,67 @@ class Paper extends Component {
     });
   }
 
+  choose(value) {
+    let answers = [...this.state.answers];
+    answers[this.state.currentNo] = value;
+    this.setState({ answers });
+  }
+
+  previous() {
+    this.setState({ currentNo: this.state.currentNo - 1 })
+  }
+
+  next() {
+    if (this.state.currentNo < this.state.paper.content.length - 1) {
+      this.setState({ currentNo: this.state.currentNo + 1 })
+    } else {
+      if (confirm("确定交卷吗?")) {
+        //交卷
+      }
+    }
+  }
+
   render() {
-    return <div>
-      {!this.state.paper && loading}
-      {this.state.paper==="waiting" && <div>
+    return <div className="paper">
+      {!this.state.paper && loadingPaper}
+      {this.state.paper === "waiting" && <div>
         <div className="info">
           正在等待考试开始…
         </div>
+      </div>}
+      {this.state.paper && this.state.paper !== "waiting" && <div>
+        <h1>
+          第 {this.state.currentNo + 1}/{this.state.paper.content.length} 题
+        </h1>
+        <div className="text">
+          {this.state.paper.content[this.state.currentNo].text}
+        </div>
+        <div className="options">
+          {this.state.paper.content[this.state.currentNo].options.map((item, index) => (
+            <div
+              key={index}
+              className={"option " + (this.state.answers[this.state.currentNo] === index ? "active" : "")}
+              onClick={() => this.choose(index)}>
+              {String.fromCharCode('A'.charCodeAt(0) + index)}. {item}
+
+              {this.state.answers[this.state.currentNo] === index &&
+              <i className={"fas fa-check"}/>}
+            </div>))}
+        </div>
+        <div className="exam-footer">
+          {!!this.state.remainingTime && <div className="countdown">
+            剩余时间 {this.state.remainingTime}
+          </div>}
+          <div className="buttons has-addons">
+            {this.state.currentNo > 0 &&
+            <button className="button is-link is-outlined"
+                    onClick={() => this.previous()}>上一题</button>}
+            <button className="button is-link" onClick={() => this.next()}>
+              {this.state.currentNo < this.state.paper.content.length - 1 ? "下一题" : "交卷"}
+            </button>
+          </div>
+        </div>
+        <i className="far fa-clock"/>
       </div>}
     </div>
   }
