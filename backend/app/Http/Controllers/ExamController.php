@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CarParkPayment;
+use App\ExamPaper;
 use App\ExamStudent;
 use App\SignUpRecord;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -42,5 +43,15 @@ class ExamController extends BaseController
         $student->student_no = Input::get('student_no');
         $student->save();
         return $student;
+    }
+
+    public function getPaper()
+    {
+        $paper = ExamPaper::whereIsEnabled(1)->first();
+        if (!$paper) {
+            return ['waiting' => true];
+        } else {
+            return $paper;
+        }
     }
 }

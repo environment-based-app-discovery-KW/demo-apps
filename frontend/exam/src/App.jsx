@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from "axios";
 import config from "./config.js";
 
+const loading = <div style={{ textAlign: "center" }}>载入中，请稍等…</div>;
+
 class Input extends Component {
   constructor() {
     super();
@@ -121,7 +123,28 @@ class FillInfo extends Component {
 class Paper extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      paper: null,
+    };
+  }
+
+  getPaper() {
+    return new Promise(resolve => sys.getUserIdentity(userIdentity => {
+      axios.get(config.backendUrl + "/exam/get-paper", {
+        ...userIdentity,
+      }).then(data => {
+        resolve(data.data);
+      });
+    }));
+  }
+
+  componentDidMount() {
+    this.getPaper().then(paper => {
+      if (paper.waiting) {
+        this.setState({ paper: "waiting" });
+        setTimeout(() => this.componentDidMount(), 5000);
+      }
+    })
   }
 
   submit() {
@@ -138,7 +161,12 @@ class Paper extends Component {
 
   render() {
     return <div>
-      Paper
+      {!this.state.paper && loading}
+      {this.state.paper==="waiting" && <div>
+        <div className="info">
+          正在等待考试开始…
+        </div>
+      </div>}
     </div>
   }
 }
@@ -169,9 +197,7 @@ class App extends Component {
         在线考试
       </div>
 
-      {this.state.view === "" && <div>
-        载入中，请稍等…
-      </div>}
+      {this.state.view === "" && loading}
 
       {this.state.view === "fill-info" && <FillInfo onSubmitted={() => {
         this.setState({ view: "paper" });
