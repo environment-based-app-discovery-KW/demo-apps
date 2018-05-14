@@ -1,15 +1,19 @@
 <?php
 
+use Illuminate\Support\Facades\Input;
 use phpseclib\Crypt\RSA;
 
-function join_paths() {
+function join_paths()
+{
     $paths = array();
 
     foreach (func_get_args() as $arg) {
-        if ($arg !== '') { $paths[] = $arg; }
+        if ($arg !== '') {
+            $paths[] = $arg;
+        }
     }
 
-    return preg_replace('#/+#','/',join('/', $paths));
+    return preg_replace('#/+#', '/', join('/', $paths));
 }
 
 function put_file($file_path)
@@ -19,15 +23,35 @@ function put_file($file_path)
     return $hash;
 }
 
-function rrmdir($dir) {
+function getUserPublicKey($appName = "")
+{
+    $public_key = Input::get("publicKey", "");
+    $signature = Input::get("signature", "");
+    $signed_content = Input::get("signedContent", "");
+    if (!starts_with($signed_content, "APP:" . $appName . ":")) {
+        return error("invalid signed content");
+    }
+    $timediff_s = abs(floatval(substr($signed_content, strlen($appName) + 5)) / 1000 - time());
+    if ($timediff_s > 600) {
+        return error("signature has expired");
+    }
+
+    if (!(verfiySignature($signature, $signed_content, $public_key))) {
+        return error("invalid signature");
+    }
+    return $public_key;
+}
+
+function rrmdir($dir)
+{
     if (is_dir($dir)) {
         $objects = scandir($dir);
         foreach ($objects as $object) {
             if ($object != "." && $object != "..") {
-                if (is_dir($dir."/".$object))
-                    rrmdir($dir."/".$object);
+                if (is_dir($dir . "/" . $object))
+                    rrmdir($dir . "/" . $object);
                 else
-                    unlink($dir."/".$object);
+                    unlink($dir . "/" . $object);
             }
         }
         rmdir($dir);
