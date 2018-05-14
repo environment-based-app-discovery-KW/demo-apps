@@ -1,3 +1,3 @@
 export default {
-  backendUrl: "http://192.168.3.52:1000",
+  backendUrl: "http://192.168.1.8:1000",
 };
