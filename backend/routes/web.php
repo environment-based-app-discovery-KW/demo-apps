@@ -15,3 +15,7 @@ Route::group(['prefix' => 'car-park'], function () {
     Route::post('pay', 'CarParkController@pay');
     Route::post('order', 'CarParkController@order');
 });
+
+Route::group(['prefix' => 'sign-up'], function () {
+    Route::post('/', 'SignUpController@index');
+});
