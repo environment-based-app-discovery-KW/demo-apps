@@ -1,3 +1,75 @@
 body {
+  padding: 0;
+  margin: 0;
   min-height: 100vh;
+  font-family: Arial, serif;
+  .header {
+    width: 100%;
+    padding: 10px;
+    background: -webkit-linear-gradient(top, #DDD, #EEE);
+    box-shadow: #00000026 0px 2px 2px;
+    text-align: center;
+    color: black;
+    position: absolute;
+    top: 0;
+  }
+  .wrapper {
+    padding: 50px 6px 0;
+    width: 100%;
+    .tabs {
+      display: flex;
+      .tab {
+        font-size: 12px;
+        flex: 1;
+        background: -webkit-linear-gradient(top, #DDD, #EEE);
+        box-shadow: #00000026 0px 2px 2px;
+        padding: 8px 4px 2px 6px;
+        &.active {
+          background: -webkit-linear-gradient(top, #AAA, #CCC);
+        }
+      }
+    }
+    .schedule-item {
+      padding: 10px 10px 4px 10px;
+      margin: 2px 0;
+      background: -webkit-linear-gradient(top, #FFF, #EEE);
+      box-shadow: #00000012 0px 2px 2px;
+      position: relative;
+      color: #999;
+      &.expanded {
+        background: -webkit-linear-gradient(top, #DDD, #EEE);
+      }
+      .expand-shrink {
+        padding: 10px;
+        position: absolute;
+        right: 10px;
+        top: 30px;
+        opacity: .9;
+      }
+      .description {
+        margin-top: 8px;
+        border: 1px solid black;
+        padding: 10px;
+        background: #f6f6f6;
+        color: #444;
+      }
+      .title {
+        color: #000;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+      i {
+        opacity: .8;
+        width: 16px;
+        text-align: center;
+      }
+      div {
+        margin-bottom: 2px;
+      }
+    }
+  }
 }
