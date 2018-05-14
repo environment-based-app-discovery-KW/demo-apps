@@ -51,7 +51,11 @@ class ExamController extends BaseController
         if (!$paper) {
             return ['waiting' => true];
         } else {
-            return $paper;
+            $content = json_decode($paper->content_json);
+            foreach ($content as $item) {
+                unset($item->key);
+            }
+            return $content;
         }
     }
 }
