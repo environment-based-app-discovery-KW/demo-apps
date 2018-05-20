@@ -1,6 +1,6 @@
 {
-  "name": "signup",
-  "version": "1.0.1",
+  "name": "exam",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
