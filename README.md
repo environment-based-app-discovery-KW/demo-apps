@@ -1,5 +1,39 @@
 # 应用场景探索
 
+## 路由
+```php
+Route::group(['prefix' => 'car-park'], function () {
+    Route::post('pay', 'CarParkController@pay');
+    Route::post('order', 'CarParkController@order');
+});
+
+Route::group(['prefix' => 'sign-up'], function () {
+    Route::post('/', 'SignUpController@index');
+});
+
+Route::group(['prefix' => 'exam'], function () {
+    Route::post('/get-user-info', 'ExamController@getUserInfo');
+    Route::post('/set-user-info', 'ExamController@setUserInfo');
+    Route::get('/get-paper', 'ExamController@getPaper');
+    Route::post('/submit', 'ExamController@submit');
+});
+
+Route::group(['prefix' => 'schedule'], function () {
+    Route::any('/', 'ScheduleController@index');
+});
+
+Route::group(['prefix' => 'menu'], function () {
+    Route::any('/get', 'MenuController@get');
+    Route::any('/order', 'MenuController@order');
+});
+```
+
+## Docker 部署方法
+```
+docker build -t demo_apps_image .
+docker run -p 0.0.0.0:3333:3333 --name demo_apps_container -t demo_apps_image
+```
+
 ## 停车场缴费 (car-park)
 
 | ![1](./imgs/car-park/1.png) | ![2](./imgs/car-park/2.png) | ![3](./imgs/car-park/3.png) |
