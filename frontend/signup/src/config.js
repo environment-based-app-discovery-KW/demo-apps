@@ -1,3 +1,3 @@
 export default {
-  backendUrl: "http://192.168.3.52:1000",
+  backendUrl: "http://ad-demo-apps.kevinwang.cc:3333",
 };
